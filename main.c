@@ -45,7 +45,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	    fclose(planning);
     } else {
-	    MessageBox(NULL, "No pause!!!", "Mickael Jakson", MB_ICONEXCLAMATION);
+	    MessageBox(NULL, "No pause!!!", "Michael Jakson", MB_ICONEXCLAMATION);
     }
 
     INPUT ip;
