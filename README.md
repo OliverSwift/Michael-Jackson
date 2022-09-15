@@ -1,7 +1,7 @@
 # Michael-Jackson
 
 Is a simple and VERY light Windows executable that acts as mouse jiggler.
-Companion file is schedule.mj which one per line pause definition file.
+Companion file is schedule.mj which is one per line pause definition file.
 
 Each line is composed of time of pause and duration of pause formatted as:
 HH:MM d
