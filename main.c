@@ -40,6 +40,50 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			    schedule[last].stop.wMilliseconds = 0;
 
 			    last++;
+		    } else
+		    if (2 == fscanf(planning, "START %ld:%ld\n", &h, &m)) {
+			// Day shift start
+			printf("Starting at %02d:%02d\n", h,m);
+			fflush(stdout);
+
+			GetLocalTime(&schedule[last].start);
+			schedule[last].start.wHour = 0;
+			schedule[last].start.wMinute = 0;
+			schedule[last].start.wSecond = 0;
+			schedule[last].start.wMilliseconds = 0;
+
+			GetLocalTime(&schedule[last].stop);
+			schedule[last].stop.wHour = (WORD)h,
+			schedule[last].stop.wMinute = (WORD)m,
+			schedule[last].stop.wSecond = 0;
+			schedule[last].stop.wMilliseconds = 0;
+
+			last++;
+		    } else
+		    if (2 == fscanf(planning, "END %ld:%ld\n", &h, &m)) {
+			// Day shift stop
+			printf("Stopping at %02d:%02d\n", h,m);
+			fflush(stdout);
+
+			GetLocalTime(&schedule[last].start);
+			schedule[last].start.wHour = (WORD)h,
+			schedule[last].start.wMinute = (WORD)m,
+			schedule[last].start.wSecond = 0;
+			schedule[last].start.wMilliseconds = 0;
+
+			GetLocalTime(&schedule[last].stop);
+			schedule[last].stop.wHour = 23;
+			schedule[last].stop.wMinute = 59;
+			schedule[last].stop.wSecond = 59;
+			schedule[last].stop.wMilliseconds = 999;
+
+			last++;
+		    }
+		    else {
+			char dummy[255];
+			fgets(dummy, sizeof(dummy), planning);
+			printf("Skipping '%s'\n", dummy);
+			fflush(stdout);
 		    }
 	    }
 
