@@ -2,7 +2,11 @@
 #include <windows.h>
 #include <stdio.h>
 
+#ifdef DEBUG
+int main(int argc, char **argv)
+#else
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
+#endif
 {
     FILE *planning;
     typedef struct _entry {
@@ -106,6 +110,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
     while(1) {
 	    SYSTEMTIME now;
+#ifdef DEBUG
+	    int was_active;
+#endif
 
 	    if (active) {
 		    ip.mi.dx = d;
@@ -118,6 +125,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	    GetLocalTime(&now);
 
+#ifdef DEBUG
+	    was_active = active;
+#endif
+
 	    active = 1;
 	    for(int e = 0; e < last; e++) {
 		    if (now.wHour >= schedule[e].start.wHour
@@ -128,6 +139,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			    break;
 		    }
 	    }
+
+#ifdef DEBUG
+	    if (active != was_active) {
+		printf("%d %02d:%02d\n", active, now.wHour, now.wMinute);
+	    }
+#endif
     }
  
     return 0;
