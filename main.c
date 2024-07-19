@@ -23,21 +23,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			    printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
 			    fflush(stdout);
 
-			    GetLocalTime(&schedule[last].start);
 			    schedule[last].start.wHour = (WORD)h,
 			    schedule[last].start.wMinute = (WORD)m,
-			    schedule[last].start.wSecond = 0;
-			    schedule[last].start.wMilliseconds = 0;
 
 			    m += d;
 			    h += (m/60);
 			    m %= 60;
 
-			    GetLocalTime(&schedule[last].stop);
 			    schedule[last].stop.wHour = (WORD)h,
 			    schedule[last].stop.wMinute = (WORD)m,
-			    schedule[last].stop.wSecond = 0;
-			    schedule[last].stop.wMilliseconds = 0;
 
 			    last++;
 		    } else
@@ -46,17 +40,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			printf("Starting at %02d:%02d\n", h,m);
 			fflush(stdout);
 
-			GetLocalTime(&schedule[last].start);
 			schedule[last].start.wHour = 0;
 			schedule[last].start.wMinute = 0;
-			schedule[last].start.wSecond = 0;
-			schedule[last].start.wMilliseconds = 0;
 
-			GetLocalTime(&schedule[last].stop);
 			schedule[last].stop.wHour = (WORD)h,
 			schedule[last].stop.wMinute = (WORD)m,
-			schedule[last].stop.wSecond = 0;
-			schedule[last].stop.wMilliseconds = 0;
 
 			last++;
 		    } else
@@ -65,17 +53,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			printf("Stopping at %02d:%02d\n", h,m);
 			fflush(stdout);
 
-			GetLocalTime(&schedule[last].start);
 			schedule[last].start.wHour = (WORD)h,
 			schedule[last].start.wMinute = (WORD)m,
-			schedule[last].start.wSecond = 0;
-			schedule[last].start.wMilliseconds = 0;
 
-			GetLocalTime(&schedule[last].stop);
 			schedule[last].stop.wHour = 23;
 			schedule[last].stop.wMinute = 59;
-			schedule[last].stop.wSecond = 59;
-			schedule[last].stop.wMilliseconds = 999;
 
 			last++;
 		    }
@@ -89,7 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	    fclose(planning);
     } else {
-	    MessageBox(NULL, "No pause!!!", "Michael Jakson", MB_ICONEXCLAMATION|MB_DEFAULT_DESKTOP_ONLY);
+	    MessageBox(NULL, "No pause??? Really?", "Michael Jakson", MB_ICONEXCLAMATION|MB_DEFAULT_DESKTOP_ONLY);
     }
 
     INPUT ip;
