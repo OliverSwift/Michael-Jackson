@@ -6,8 +6,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 {
     FILE *planning;
     typedef struct _entry {
-	SYSTEMTIME start;
-	SYSTEMTIME stop;
+	long start;
+	long stop;
     } Entry;
 #define MAX_PAUSES 20
     Entry schedule[MAX_PAUSES];
@@ -20,31 +20,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 		    long h,m,d;
 
 		    if (3 == fscanf(planning, "%ld:%ld %ld\n", &h, &m, &d)) {
-			    printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
-			    fflush(stdout);
+			printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
+			fflush(stdout);
 
-			    schedule[last].start.wHour = (WORD)h,
-			    schedule[last].start.wMinute = (WORD)m,
+			schedule[last].start = h * 60 + m;
+			schedule[last].stop = schedule[last].start + d;
 
-			    m += d;
-			    h += (m/60);
-			    m %= 60;
-
-			    schedule[last].stop.wHour = (WORD)h,
-			    schedule[last].stop.wMinute = (WORD)m,
-
-			    last++;
+			last++;
 		    } else
 		    if (2 == fscanf(planning, "START %ld:%ld\n", &h, &m)) {
 			// Day shift start
 			printf("Starting at %02d:%02d\n", h,m);
 			fflush(stdout);
 
-			schedule[last].start.wHour = 0;
-			schedule[last].start.wMinute = 0;
-
-			schedule[last].stop.wHour = (WORD)h,
-			schedule[last].stop.wMinute = (WORD)m,
+			schedule[last].start = 0;
+			schedule[last].stop = h * 60 + m;
 
 			last++;
 		    } else
@@ -53,11 +43,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 			printf("Stopping at %02d:%02d\n", h,m);
 			fflush(stdout);
 
-			schedule[last].start.wHour = (WORD)h,
-			schedule[last].start.wMinute = (WORD)m,
-
-			schedule[last].stop.wHour = 23;
-			schedule[last].stop.wMinute = 59;
+			schedule[last].start = h * 60 + m;
+			schedule[last].stop = 23*60+59;
 
 			last++;
 		    }
@@ -88,6 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
     while(1) {
 	    SYSTEMTIME now;
+	    long minutes;
 #ifdef DEBUG
 	    int was_active;
 #endif
@@ -102,6 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 	    Sleep(1000);
 
 	    GetLocalTime(&now);
+	    minutes = now.wHour * 60 + now.wMinute;
 
 #ifdef DEBUG
 	    was_active = active;
@@ -109,10 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	    active = 1;
 	    for(int e = 0; e < last; e++) {
-		    if (now.wHour >= schedule[e].start.wHour
-		     && now.wMinute >= schedule[e].start.wMinute
-		     && now.wHour <= schedule[e].stop.wHour
-		     && now.wMinute < schedule[e].stop.wMinute) {
+		    if (minutes >= schedule[e].start && minutes <= schedule[e].stop) {
 			    active = 0;
 			    break;
 		    }
