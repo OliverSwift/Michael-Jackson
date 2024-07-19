@@ -2,11 +2,7 @@
 #include <windows.h>
 #include <stdio.h>
 
-#ifdef DEBUG
-int main(int argc, char **argv)
-#else
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, int nCmdShow)
-#endif
 {
     FILE *planning;
     typedef struct _entry {
@@ -93,7 +89,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 
 	    fclose(planning);
     } else {
-	    MessageBox(NULL, "No pause!!!", "Michael Jakson", MB_ICONEXCLAMATION);
+	    MessageBox(NULL, "No pause!!!", "Michael Jakson", MB_ICONEXCLAMATION|MB_DEFAULT_DESKTOP_ONLY);
     }
 
     INPUT ip;
