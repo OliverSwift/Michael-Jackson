@@ -20,39 +20,39 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
 		    long h,m,d;
 
 		    if (3 == fscanf(planning, "%ld:%ld %ld\n", &h, &m, &d)) {
-			printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
-			fflush(stdout);
+				printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
+				fflush(stdout);
 
-			schedule[last].start = h * 60 + m;
-			schedule[last].stop = schedule[last].start + d;
+				schedule[last].start = h * 60 + m;
+				schedule[last].stop = schedule[last].start + d;
 
-			last++;
+				last++;
 		    } else
 		    if (2 == fscanf(planning, "START %ld:%ld\n", &h, &m)) {
-			// Day shift start
-			printf("Starting at %02d:%02d\n", h,m);
-			fflush(stdout);
+				// Day shift start
+				printf("Starting at %02d:%02d\n", h,m);
+				fflush(stdout);
 
-			schedule[last].start = 0;
-			schedule[last].stop = h * 60 + m;
+				schedule[last].start = 0;
+				schedule[last].stop = h * 60 + m;
 
-			last++;
+				last++;
 		    } else
 		    if (2 == fscanf(planning, "END %ld:%ld\n", &h, &m)) {
-			// Day shift stop
-			printf("Stopping at %02d:%02d\n", h,m);
-			fflush(stdout);
+				// Day shift stop
+				printf("Stopping at %02d:%02d\n", h,m);
+				fflush(stdout);
 
-			schedule[last].start = h * 60 + m;
-			schedule[last].stop = 23*60+59;
+				schedule[last].start = h * 60 + m;
+				schedule[last].stop = 23*60+59;
 
-			last++;
+				last++;
 		    }
 		    else {
-			char dummy[255];
-			fgets(dummy, sizeof(dummy), planning);
-			printf("Skipping '%s'\n", dummy);
-			fflush(stdout);
+				char dummy[255];
+				fgets(dummy, sizeof(dummy), planning);
+				printf("Skipping '%s'\n", dummy);
+				fflush(stdout);
 		    }
 	    }
 
