@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Linux+MinGW",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-clang-x64",
+            "compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc"
+        }
+    ],
+    "version": 4
+}
