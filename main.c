@@ -27,8 +27,11 @@ int read_schedule(const char *filename) {
 
     while(!feof(planning) && last < MAX_PAUSES) {
         long h,m,d;
+        char line[255];
 
-        if (3 == fscanf(planning, "%ld:%ld %ld\n", &h, &m, &d)) {
+        if ( NULL == fgets(line, sizeof(line), planning)) break;
+
+        if (3 == sscanf(line, "%ld:%ld %ld\n", &h, &m, &d)) {
             printf("Pause at %02d:%02d for %d minutes\n", h,m,d);
             fflush(stdout);
 
@@ -40,7 +43,7 @@ int read_schedule(const char *filename) {
 
             last++;
         } else
-        if (2 == fscanf(planning, "START %ld:%ld\n", &h, &m)) {
+        if (2 == sscanf(line, "START %ld:%ld\n", &h, &m)) {
             // Day shift start
             printf("Starting at %02d:%02d\n", h,m);
             fflush(stdout);
@@ -50,7 +53,7 @@ int read_schedule(const char *filename) {
 
             last++;
         } else
-        if (2 == fscanf(planning, "END %ld:%ld\n", &h, &m)) {
+        if (2 == sscanf(line, "END %ld:%ld\n", &h, &m)) {
             // Day shift stop
             printf("Stopping at %02d:%02d\n", h,m);
             fflush(stdout);
@@ -61,9 +64,7 @@ int read_schedule(const char *filename) {
             last++;
         }
         else {
-            char dummy[255];
-            fgets(dummy, sizeof(dummy), planning);
-            printf("Skipping '%s'\n", dummy);
+            printf("Skipping '%s'\n", line);
             fflush(stdout);
         }
     }
@@ -94,9 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
     while(1) {
         SYSTEMTIME now;
         long minutes;
-#ifdef DEBUG
         int was_active;
-#endif
 
         if (active) {
             ip.mi.dx = d;
@@ -110,9 +109,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
         GetLocalTime(&now);
         minutes = now.wHour * 60 + now.wMinute;
 
-#ifdef DEBUG
         was_active = active;
-#endif
 
         active = 1;
         for(int e = 0; e < last; e++) {
@@ -126,11 +123,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pCmdLine, 
             }
         }
 
-#ifdef DEBUG
         if (active != was_active) {
-            printf("%s %02d:%02d\n", active?"On ":"Off", now.wHour, now.wMinute);
-        }
+            FILE *report;
+
+            report = fopen("status.txt","w");
+            if (report) {
+                fprintf(report, "%s since %02d:%02d\n", active?"On ":"Off", now.wHour, now.wMinute);
+#ifdef DEBUG
+                printf("%s %02d:%02d\n", active?"On ":"Off", now.wHour, now.wMinute);
 #endif
+                fclose(report);
+            }
+        }
     }
 
     return 0;
